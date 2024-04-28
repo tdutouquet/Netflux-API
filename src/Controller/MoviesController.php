@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api')]
 class MoviesController extends AbstractController
@@ -23,11 +24,13 @@ class MoviesController extends AbstractController
     }
 
     #[Route('/movies', name: 'get_movies', methods: ['GET'])]
-    public function getAllMovies(): JsonResponse
+    public function getAllMovies(SerializerInterface $serializer): JsonResponse
     {
         $movies = $this->moviesRepo->findAll();
 
-        return $this->json($movies);
+        $filteredMovies = $serializer->serialize($movies, 'json', ['groups' => 'main']);
+        
+        return $this->json($filteredMovies);
     }
 
     #[Route('/movies/{id}', name: 'get_movie', methods: ['GET'])]

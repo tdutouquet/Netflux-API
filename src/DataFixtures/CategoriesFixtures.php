@@ -11,11 +11,11 @@ class CategoriesFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
-        
-        for ($i = 0; $i < 7; $i++) {
+        $categories = ['Action', 'Romance', 'Drame', 'Thriller', 'Documentaire'];
+
+        foreach ($categories as $cat) {
             $category = new Categories();
-            $category->setName($faker->word());
+            $category->setName($cat);
             $manager->persist($category);
         }
 
