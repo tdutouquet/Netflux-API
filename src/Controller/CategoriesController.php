@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -19,12 +20,12 @@ class CategoriesController extends AbstractController
     }
 
     #[Route('/categories', name: 'get_categories', methods: ['GET'])]
-    public function getCategories(SerializerInterface $serializer): JsonResponse
+    public function getCategories(SerializerInterface $serializer): Response
     {
         $categories = $this->categoriesRepo->findAll();
 
-        $serializedCategories = $serializer->serialize($categories, 'json', ['groups' => 'main']);
+        $serializedCategories = $serializer->serialize($categories, 'json', ['groups' => ['main']]);
         
-        return $this->json($serializedCategories);
+        return new Response($serializedCategories, 200, ['Content-Type' => 'application/json']);
     }
 }

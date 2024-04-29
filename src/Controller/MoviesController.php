@@ -27,13 +27,13 @@ class MoviesController extends AbstractController
     }
 
     #[Route('/movies', name: 'get_movies', methods: ['GET'])]
-    public function getAllMovies(): JsonResponse
+    public function getAllMovies(): Response
     {
         $movies = $this->moviesRepo->findAll();
 
         $serializedMovies = $this->serializer->serialize($movies, 'json', ['groups' => 'main']);
         
-        return $this->json($serializedMovies);
+        return new Response($serializedMovies, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/movies/{id}', name: 'get_movie', methods: ['GET'])]
