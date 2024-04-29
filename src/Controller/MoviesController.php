@@ -3,34 +3,37 @@
 namespace App\Controller;
 
 use App\Entity\Movies;
+use App\Entity\Categories;
 use App\Repository\MoviesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
 class MoviesController extends AbstractController
 {
     private $moviesRepo;
     private $em;
+    private $serializer;
 
-    public function __construct(MoviesRepository $moviesRepo, EntityManagerInterface $em) {
+    public function __construct(MoviesRepository $moviesRepo, EntityManagerInterface $em, SerializerInterface $serializer) {
         $this->moviesRepo = $moviesRepo;
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
     #[Route('/movies', name: 'get_movies', methods: ['GET'])]
-    public function getAllMovies(SerializerInterface $serializer): JsonResponse
+    public function getAllMovies(): JsonResponse
     {
         $movies = $this->moviesRepo->findAll();
 
-        $filteredMovies = $serializer->serialize($movies, 'json', ['groups' => 'main']);
+        $serializedMovies = $this->serializer->serialize($movies, 'json', ['groups' => 'main']);
         
-        return $this->json($filteredMovies);
+        return $this->json($serializedMovies);
     }
 
     #[Route('/movies/{id}', name: 'get_movie', methods: ['GET'])]
@@ -49,17 +52,22 @@ class MoviesController extends AbstractController
     public function addMovie(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        $categories = $this->em->getRepository(Categories::class)->findAll();
 
         $movie = new Movies();
         $movie->setTitle($data['title']);
         $movie->setDescription($data['description']);
         $movie->setDate($data['date']);
         $movie->setDirector($data['director']);
-
+        foreach($data['categories'] as $category) {
+            $movie->addCategory($categories[$category]); // valable si on récupère les categs sous forme d'id
+        }
         $this->em->persist($movie);
         $this->em->flush();
 
-        return $this->json($movie);
+        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => 'main']);
+
+        return $this->json($serializedMovie);
     }
 
     #[Route('/movies/{id}', name: 'update_movie', methods: ['PUT'])]
@@ -77,11 +85,20 @@ class MoviesController extends AbstractController
         $movie->setDescription($data['description'] ?? $movie->getDescription());
         $movie->setDate($data['date'] ?? $movie->getDate());
         $movie->setDirector($data['director'] ?? $movie->getDirector());
+        if (isset($data['categories'])) {
+            foreach($data['categories'] as $category) {
+                $movie->addCategory($category);
+            }
+        } else {
+            $movie->getCategories();
+        }
 
         $this->em->persist($movie);
         $this->em->flush();
 
-        return $this->json($movie);
+        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => 'main']);
+
+        return $this->json($serializedMovie);
     }
 
     #[Route('/movies/{id}', name: 'delete_movie', methods: ['DELETE'])]
