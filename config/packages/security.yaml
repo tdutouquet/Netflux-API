@@ -33,6 +33,7 @@ security:
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users, roles: ROLE_ADMIN, methods: [GET, POST, PUT, DELETE] }
         - { path: ^/api/movies, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/movies, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
         - { path: ^/api/categories, roles: PUBLIC_ACCESS, methods: [GET] }
