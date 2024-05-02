@@ -80,8 +80,8 @@ class MoviesController extends AbstractController
     public function updateMovie($id, Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
         $movie = $this->moviesRepo->find($id);
+        $categories = $this->em->getRepository(Categories::class)->findAll();
 
         if (!$movie) {
             return $this->json(['message' => 'Ce film n\'existe pas'], Response::HTTP_NOT_FOUND);
@@ -93,7 +93,7 @@ class MoviesController extends AbstractController
         $movie->setDirector($data['director'] ?? $movie->getDirector());
         if (isset($data['categories'])) {
             foreach ($data['categories'] as $category) {
-                $movie->addCategory($category);
+                $movie->addCategory($categories[$category]);
             }
         } else {
             $movie->getCategories();
@@ -104,7 +104,10 @@ class MoviesController extends AbstractController
 
         $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => 'main']);
 
-        return $this->json($serializedMovie);
+        return $this->json([
+            'message' => 'Film modifié avec succès',
+            'movie' => $serializedMovie
+        ]);
     }
 
     #[Route('/movies/{id}', name: 'delete_movie', methods: ['DELETE'])]
