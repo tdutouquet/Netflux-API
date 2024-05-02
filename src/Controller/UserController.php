@@ -54,6 +54,7 @@ class UserController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $user->setEmail($data['email'] ?? $user->getEmail());
         $user->setPassword($user->getPassword());
+        $user->setBanned($data['isBanned'] ?? $user->isBanned());
         $data['isAdmin'] ? $user->setRoles(['ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
         
         $this->em->persist($user);
