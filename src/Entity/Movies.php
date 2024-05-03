@@ -44,10 +44,18 @@ class Movies
     #[Groups(['main'])]
     private Collection $categories;
 
+    /**
+     * @var Collection<int, Comments>
+     */
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'movie')]
+    #[Groups(['comments'])]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->addedAt = new \DateTimeImmutable();
         $this->categories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +143,36 @@ class Movies
     public function removeCategory(Categories $category): static
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getMovie() === $this) {
+                $comment->setMovie(null);
+            }
+        }
 
         return $this;
     }

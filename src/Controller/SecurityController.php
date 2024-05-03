@@ -7,8 +7,10 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -24,7 +26,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -43,12 +45,12 @@ class SecurityController extends AbstractController
 
         return $this->json([
             'message' => 'Utilisateur créé avec succès',
-            'user' => $user
+            // 'user' => $user
         ], 201);
     }
 
     #[Route('/login', name: 'app_login', methods: ['POST'])]
-    public function login(Request $request, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher, JWTTokenManagerInterface $JWTManager): JsonResponse
+    public function login(Request $request, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher, JWTTokenManagerInterface $JWTManager, SerializerInterface $serializer): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -62,10 +64,14 @@ class SecurityController extends AbstractController
 
         $token = $JWTManager->create($user);
 
-        $response = $this->json([
-            'message' => 'Connexion réussie',
-            'user' => $user
-        ], 200);
+        $serializedUser = $serializer->serialize($user, 'json', ['groups' => 'main']);
+
+        $response = new Response($serializedUser, 200, ['Content-Type' => 'application/json']);
+
+        // $response = $this->json([
+        //     'message' => 'Connexion réussie',
+        //     'user' => $serializedUser
+        // ], 200);
 
         $response->headers->setCookie(new Cookie('BEARER', $token, time() + 3600, '/', null, true, true));
         return $response;

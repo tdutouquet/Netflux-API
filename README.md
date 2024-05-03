@@ -2,7 +2,7 @@
 
 ## Setup
 
-To launch the SYmfony server, run the following command:
+To launch the Symfony server, run the following command:
 
 ```
 symfony server:start
@@ -37,12 +37,19 @@ Once the fixtures have been loaded, an administrator account is created with the
 
 ### Base entry point
 
-http://localhost:8000/api/
+http://localhost:8000/api
 
 ### Authentication
 
 * Register (public) - POST: http://localhost:8000/api/register
 * Login (public) - POST: http://localhost:8000/api/login
+
+### Users
+
+* Retrieve all users (admin) - GET: http://localhost:8000/api/users
+* Retrieve a specific user (admin) - GET: http://localhost:8000/api/users/id
+* Edit a user (admin) - PUT: http://localhost:8000/api/users/id
+* Delete a user (admin) - DELETE: http://localhost:8000/api/users/id
 
 ### Movies
 
@@ -60,3 +67,8 @@ http://localhost:8000/api/
 * Edit a category (admin) - PUT: http://localhost:8000/api/categories/id
 * Delete a category (admin) - DELETE: http://localhost:8000/api/categories/id
 
+### Comments
+
+* Retrieve all comments (public) - GET: http://localhost:8000/api/comments
+* Add a comment (user) - POST: http://localhost:8000/api/comments
+* Delete a comment (admin) - DELETE: http://localhost:8000/api/comments/id

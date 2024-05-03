@@ -46,7 +46,7 @@ class MoviesController extends AbstractController
             return $this->json(['message' => 'Ce film n\'existe pas'], Response::HTTP_NOT_FOUND);
         }
 
-        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => 'main']);
+        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => ['main', 'comments']]);
 
         return new Response($serializedMovie, 200, ['Content-Type' => 'application/json']);
     }

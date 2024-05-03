@@ -16,7 +16,7 @@ class MoviesFixtures extends Fixture
 
         for ($i = 0; $i < 10; $i++) {
             $movie = new \App\Entity\Movies();
-            $movie->setTitle($faker->company());
+            $movie->setTitle($faker->text(15));
             $movie->setDescription($faker->text(200));
             $movie->setDate($faker->year());
             $movie->setDirector($faker->name());
