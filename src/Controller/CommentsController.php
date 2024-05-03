@@ -33,7 +33,7 @@ class CommentsController extends AbstractController
     {
         $comments = $this->commentsRepo->findAll();
 
-        $serializedComments = $this->serializer->serialize($comments, 'json', ['groups' => ['main', 'comments']]);
+        $serializedComments = $this->serializer->serialize($comments, 'json', ['groups' => ['admin']]);
 
         return new Response($serializedComments, 200, ['Content-Type' => 'application/json']);
     }

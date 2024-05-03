@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
@@ -15,23 +16,27 @@ class UserController extends AbstractController
 {
     private $userRepo;
     private $em;
+    private $serializer;
 
-    public function __construct(UserRepository $userRepo, EntityManagerInterface $em)
+    public function __construct(UserRepository $userRepo, EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->userRepo = $userRepo;
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
     #[Route('/users', name: 'get_users', methods: ['GET'])]
-    public function getAllUsers(): JsonResponse
+    public function getAllUsers(): Response
     {
         $users = $this->userRepo->findAll();
 
-        return $this->json($users, 200);
+        $serializedUsers = $this->serializer->serialize($users, 'json', ['groups' => 'main']);
+
+        return new Response($serializedUsers, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
-    public function getIndUser($id): JsonResponse
+    public function getIndUser($id): Response
     {
         $user = $this->userRepo->find($id);
 
@@ -39,7 +44,9 @@ class UserController extends AbstractController
             return $this->json(['message' => 'Cet utilisateur n\'existe pas'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($user, 200);
+        $serializedUser = $this->serializer->serialize($user, 'json', ['groups' => 'main']);
+
+        return new Response($serializedUser, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/users/{id}', name: 'update_user', methods: ['PUT'])]
@@ -62,7 +69,7 @@ class UserController extends AbstractController
 
         return $this->json([
             'message' => 'Utilisateur mis à jour avec succès',
-            'user' => $user
+            // 'user' => $user
         ], 200);
     }
 

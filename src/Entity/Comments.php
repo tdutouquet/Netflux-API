@@ -13,24 +13,25 @@ class Comments
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main'])]
+    #[ORM\Column(type: Types::TEXT, length: 500)]
+    #[Groups(['main', 'admin'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['admin'])]
+    #[Groups(['admin', 'admin'])]
     private ?Movies $movie = null;
 
     #[ORM\Column]
+    #[Groups(['main', 'admin'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()

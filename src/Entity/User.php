@@ -17,18 +17,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private array $roles = [];
 
     /**
@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?bool $isBanned = null;
 
     #[ORM\Column]

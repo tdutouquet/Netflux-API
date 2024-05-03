@@ -15,11 +15,11 @@ class Movies
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
