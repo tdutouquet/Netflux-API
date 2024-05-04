@@ -18,7 +18,7 @@ class LikesFixtures extends Fixture implements DependentFixtureInterface
         $users = $manager->getRepository(User::class)->findAll();
         $movies = $manager->getRepository(Movies::class)->findAll();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $like = new Likes();
             $like->setUser($users[array_rand($users)]);
             $like->setMovie($movies[array_rand($movies)]);
