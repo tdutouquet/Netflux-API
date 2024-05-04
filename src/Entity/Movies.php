@@ -51,11 +51,19 @@ class Movies
     #[Groups(['comments'])]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, Likes>
+     */
+    #[ORM\OneToMany(targetEntity: Likes::class, mappedBy: 'movie')]
+    #[Groups(['likes'])]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->addedAt = new \DateTimeImmutable();
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +179,36 @@ class Movies
             // set the owning side to null (unless already changed)
             if ($comment->getMovie() === $this) {
                 $comment->setMovie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Likes>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Likes $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Likes $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getMovie() === $this) {
+                $like->setMovie(null);
             }
         }
 

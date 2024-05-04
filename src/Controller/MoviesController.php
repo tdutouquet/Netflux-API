@@ -32,7 +32,7 @@ class MoviesController extends AbstractController
     {
         $movies = $this->moviesRepo->findAll();
 
-        $serializedMovies = $this->serializer->serialize($movies, 'json', ['groups' => 'main']);
+        $serializedMovies = $this->serializer->serialize($movies, 'json', ['groups' => ['main', 'comments', 'likes']]);
 
         return new Response($serializedMovies, 200, ['Content-Type' => 'application/json']);
     }
@@ -46,7 +46,7 @@ class MoviesController extends AbstractController
             return $this->json(['message' => 'Ce film n\'existe pas'], Response::HTTP_NOT_FOUND);
         }
 
-        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => ['main', 'comments']]);
+        $serializedMovie = $this->serializer->serialize($movie, 'json', ['groups' => ['main', 'comments', 'likes']]);
 
         return new Response($serializedMovie, 200, ['Content-Type' => 'application/json']);
     }
@@ -63,7 +63,7 @@ class MoviesController extends AbstractController
         $movie->setDate($data['date']);
         $movie->setDirector($data['director']);
         foreach ($data['categories'] as $category) {
-            $movie->addCategory($categories[$category]); // valable si on récupère les categs sous forme d'id
+            $movie->addCategory($categories[$category]);
         }
         $this->em->persist($movie);
         $this->em->flush();
