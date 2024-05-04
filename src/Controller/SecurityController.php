@@ -68,12 +68,14 @@ class SecurityController extends AbstractController
 
         $response = new Response($serializedUser, 200, ['Content-Type' => 'application/json']);
 
-        // $response = $this->json([
-        //     'message' => 'Connexion réussie',
-        //     'user' => $serializedUser
-        // ], 200);
+        $response->headers->setCookie(
+            new Cookie('BEARER', $token, time() + 3600, '/', null, true, true)
+        );
 
-        $response->headers->setCookie(new Cookie('BEARER', $token, time() + 3600, '/', null, true, true));
+        $response->headers->setCookie(
+            new Cookie('CHECKER', 'Your session is active', time() + 3600, '/', null, true, false)
+        );
+
         return $response;
     }
 
@@ -85,6 +87,7 @@ class SecurityController extends AbstractController
         ], 200);
 
         $response->headers->clearCookie('BEARER');
+        $response->headers->clearCookie('CHECKER');
         return $response;
     }
 }

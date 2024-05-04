@@ -14,6 +14,8 @@ This project contains fixtures, which allow you to kickstart the database for se
 * Users ;
 * Movies ;
 * Categories ;
+* Comments ;
+* Likes
 
 To inject fixtures into the database :
 
@@ -72,3 +74,8 @@ http://localhost:8000/api
 * Retrieve all comments (public) - GET: http://localhost:8000/api/comments
 * Add a comment (user) - POST: http://localhost:8000/api/comments
 * Delete a comment (admin) - DELETE: http://localhost:8000/api/comments/id
+
+### Likes
+
+* Add a like (user, no duplicates) - POST: http://localhost:8000/api/likes
+* Delete a like (user) - DELETE: http://localhost:8000/api/likes/id

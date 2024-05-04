@@ -41,6 +41,7 @@ security:
         - { path: ^/api/comments, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/comments, roles: ROLE_USER, methods: [POST] }
         - { path: ^/api/comments, roles: ROLE_ADMIN, methods: [DELETE] }
+        - { path: ^/api/likes, roles: ROLE_USER, methods: [POST, DELETE] }
 
 
 when@test:
