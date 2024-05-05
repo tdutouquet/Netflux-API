@@ -80,6 +80,11 @@ http://localhost:8000/api
 * Add a like (user, no duplicates) - POST: http://localhost:8000/api/likes
 * Delete a like (user) - DELETE: http://localhost:8000/api/likes/id
 
+### Comment likes
+
+* Add a like (user, no duplicates) - POST: http://localhost:8000/api/comment-likes
+* Delete a like (user) - DELETE: http://localhost:8000/api/comment-likes/id
+
 ## DB info
 
 You can check out a visualization of the database at https://dbdiagram.io/d/Netflux-6634b09c5b24a634d06bfd7e

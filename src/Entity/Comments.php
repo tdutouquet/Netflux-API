@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommentsRepository;
@@ -34,9 +36,17 @@ class Comments
     #[Groups(['main', 'admin'])]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Collection<int, CommentLikes>
+     */
+    #[ORM\OneToMany(targetEntity: CommentLikes::class, mappedBy: 'comment')]
+    #[Groups(['main', 'admin'])]
+    private Collection $commentLikes;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->commentLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,6 +98,36 @@ class Comments
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentLikes>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLikes $commentLike): static
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLikes $commentLike): static
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getComment() === $this) {
+                $commentLike->setComment(null);
+            }
+        }
 
         return $this;
     }

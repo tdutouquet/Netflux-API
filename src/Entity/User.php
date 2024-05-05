@@ -56,6 +56,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Likes::class, mappedBy: 'user')]
     private Collection $likes;
 
+    /**
+     * @var Collection<int, CommentLikes>
+     */
+    #[ORM\OneToMany(targetEntity: CommentLikes::class, mappedBy: 'user')]
+    private Collection $commentLikes;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
@@ -63,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTimeImmutable();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->commentLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,6 +225,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($like->getUser() === $this) {
                 $like->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentLikes>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLikes $commentLike): static
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLikes $commentLike): static
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getUser() === $this) {
+                $commentLike->setUser(null);
             }
         }
 
