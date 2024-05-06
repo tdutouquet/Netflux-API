@@ -29,7 +29,7 @@ class CategoriesController extends AbstractController
     {
         $categories = $this->categoriesRepo->findAll();
 
-        $serializedCategories = $serializer->serialize($categories, 'json', ['groups' => ['main']]);
+        $serializedCategories = $serializer->serialize($categories, 'json', ['groups' => ['categories']]);
         
         return new Response($serializedCategories, 200, ['Content-Type' => 'application/json']);
     }
@@ -43,7 +43,7 @@ class CategoriesController extends AbstractController
             return new JsonResponse(['message' => 'Category not found'], 404);
         }
 
-        $serializedCategory = $serializer->serialize($category, 'json', ['groups' => ['main']]);
+        $serializedCategory = $serializer->serialize($category, 'json', ['groups' => ['categories']]);
 
         return new Response($serializedCategory, 200, ['Content-Type' => 'application/json']);
     }

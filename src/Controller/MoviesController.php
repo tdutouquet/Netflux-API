@@ -63,7 +63,7 @@ class MoviesController extends AbstractController
         $movie->setDate($data['date']);
         $movie->setDirector($data['director']);
         foreach ($data['categories'] as $category) {
-            $movie->addCategory($categories[$category]);
+            $movie->addCategory($categories[$category-1]);
         }
         $this->em->persist($movie);
         $this->em->flush();
@@ -92,8 +92,9 @@ class MoviesController extends AbstractController
         $movie->setDate($data['date'] ?? $movie->getDate());
         $movie->setDirector($data['director'] ?? $movie->getDirector());
         if (isset($data['categories'])) {
+            $movie->getCategories()->clear();
             foreach ($data['categories'] as $category) {
-                $movie->addCategory($categories[$category]);
+                $movie->addCategory($categories[$category-1]);
             }
         } else {
             $movie->getCategories();

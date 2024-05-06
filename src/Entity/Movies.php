@@ -15,15 +15,15 @@ class Movies
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'categories'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'categories'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'categories'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 4)]
@@ -55,7 +55,7 @@ class Movies
      * @var Collection<int, Likes>
      */
     #[ORM\OneToMany(targetEntity: Likes::class, mappedBy: 'movie')]
-    #[Groups(['likes'])]
+    #[Groups(['likes', 'categories'])]
     private Collection $likes;
 
     public function __construct()

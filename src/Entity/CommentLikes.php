@@ -16,7 +16,7 @@ class CommentLikes
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentLikes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Comments $comment = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentLikes')]

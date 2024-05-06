@@ -14,17 +14,18 @@ class Categories
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'categories'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'categories'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Movies>
      */
     #[ORM\ManyToMany(targetEntity: Movies::class, mappedBy: 'categories')]
+    #[Groups(['categories'])]
     private Collection $movies;
 
     public function __construct()
