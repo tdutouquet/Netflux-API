@@ -7,6 +7,15 @@ To launch the Symfony server, run the following command:
 ```
 symfony server:start
 ```
+## Database
+
+By default, this project's database is `ecf_symfony_api`. You can change this name and the db authentication details in `.env`, at lign 28.
+
+In order to create the database from Symfony:
+
+```
+symfony console doctrine:database:create
+```
 
 ## Fixtures
 
