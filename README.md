@@ -1,4 +1,4 @@
-# Netflux (back/api) documentation
+# Netflux (API) documentation
 
 ## Setup
 
@@ -11,13 +11,13 @@ symfony server:start
 ## Fixtures
 
 This project contains fixtures, which allow you to kickstart the database for several entities:
-* Users ;
-* Movies ;
-* Categories ;
-* Comments ;
+* Users
+* Movies
+* Categories
+* Comments
 * Likes
 
-To inject fixtures into the database :
+To inject fixtures in the database:
 
 ```
 symfony console make:migration
